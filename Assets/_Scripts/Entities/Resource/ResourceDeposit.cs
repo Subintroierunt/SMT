@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace Entities
 {
-    public class ResourcePoint : MonoBehaviour
+    public class ResourceDeposit : MonoBehaviour
     {
-        public event Action<ResourcePoint, Vector2Int> Depleted;
+        public event Action<ResourceDeposit, Vector2Int> Depleted;
 
         private bool isDepleted;
         private bool isLocked;

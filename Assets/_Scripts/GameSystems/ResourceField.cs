@@ -7,31 +7,31 @@ using UnityEngine;
 
 namespace GameSystems
 {
-    public class ResourceField : MonoBehaviour
+    public class ResourceField
     {
-        private List<ResourcePoint> resourcePoints = new List<ResourcePoint>();
+        private List<ResourceDeposit> resourceDeposits = new List<ResourceDeposit>();
 
-        public void AddResourcePoint(ResourcePoint resourcePoint) =>
-            resourcePoints.Add(resourcePoint);
+        public void AddResourcePoint(ResourceDeposit resourcePoint) =>
+            resourceDeposits.Add(resourcePoint);
 
-        public void RemoveResourcePoint(ResourcePoint resourcePoint) =>
-            resourcePoints.Remove(resourcePoint);
+        public void RemoveResourcePoint(ResourceDeposit resourcePoint) =>
+            resourceDeposits.Remove(resourcePoint);
 
         public int GetCount() =>
-            resourcePoints.Count;
+            resourceDeposits.Count;
 
-        public ResourcePoint GetClosestRes(Vector3 point)
+        public ResourceDeposit GetClosestRes(Vector3 point)
         {
-            if (resourcePoints.Count == 0 )
+            if (resourceDeposits.Count == 0 )
             {
                 return null;
             }
 
-            SortedDictionary<float, ResourcePoint> distances = new SortedDictionary<float, ResourcePoint>();
+            SortedDictionary<float, ResourceDeposit> distances = new SortedDictionary<float, ResourceDeposit>();
 
-            for (int i = 0; i < resourcePoints.Count; i++)
+            for (int i = 0; i < resourceDeposits.Count; i++)
             {
-                distances.Add(Vector3.Distance(point, resourcePoints[i].transform.position), resourcePoints[i]);
+                distances.Add(Vector3.Distance(point, resourceDeposits[i].transform.position), resourceDeposits[i]);
             }
 
             for (int i = 0; i < distances.Count; i++)

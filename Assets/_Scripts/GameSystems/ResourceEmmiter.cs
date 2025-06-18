@@ -8,19 +8,23 @@ namespace GameSystems
 {
     public class ResourceEmmiter : MonoBehaviour
     {
-        [SerializeField] private ResourcePoint prefab;
+        [SerializeField] private ResourceDeposit prefab;
 
-        [SerializeField] private ResourceField resourceField;
+        private ResourceField resourceField;
         
         [SerializeField] private Vector2 emmiterSize = new Vector2(8,8);
         [SerializeField] private float emmiterInterval = 5f;
         [SerializeField] private int emitterMaxEntities = 5;
 
         private List<Vector2Int> emitterPoints;
-        private List<ResourcePoint> resourcePoints = new List<ResourcePoint>();
+        private List<ResourceDeposit> resourceDeposits = new List<ResourceDeposit>();
+
+        public ResourceField ResourceField =>
+            resourceField;
 
         private void Start()
         {
+            resourceField = new ResourceField();
             emitterPoints = new List<Vector2Int>();
 
             for (int i = 0; i < emmiterSize.y; i++)
@@ -33,9 +37,9 @@ namespace GameSystems
 
             for (int i = 0; i < emitterMaxEntities; i++)
             {
-                ResourcePoint resPoint = Instantiate(prefab, transform);
+                ResourceDeposit resPoint = Instantiate(prefab, transform);
                 resPoint.gameObject.SetActive(false);
-                resourcePoints.Add(resPoint);
+                resourceDeposits.Add(resPoint);
             }
         }
 
@@ -55,17 +59,17 @@ namespace GameSystems
             }
             int rand = Mathf.RoundToInt(Random.Range(0, emitterPoints.Count));
             
-            ResourcePoint resPoint = resourcePoints[0];
+            ResourceDeposit resPoint = resourceDeposits[0];
             resPoint.Restore(emitterPoints[rand]);
             resPoint.Depleted += ResourcePointDepleted;
             emitterPoints.RemoveAt(rand);
-            resourcePoints.RemoveAt(0);
+            resourceDeposits.RemoveAt(0);
             resourceField.AddResourcePoint(resPoint);
         }
 
-        private void ResourcePointDepleted(ResourcePoint resPoint, Vector2Int coords)
+        private void ResourcePointDepleted(ResourceDeposit resPoint, Vector2Int coords)
         {
-            resourcePoints.Add(resPoint);
+            resourceDeposits.Add(resPoint);
             emitterPoints.Add(coords);
             resourceField.RemoveResourcePoint(resPoint);
             resPoint.Depleted -= ResourcePointDepleted;

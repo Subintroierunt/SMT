@@ -8,33 +8,34 @@ namespace Entities
 {
     public class DroneAI : MonoBehaviour
     {
-        [SerializeField] private ResourceField resourceField;
+        [SerializeField] private ResourceEmmiter resourceEmmiter;
+        [SerializeField] private ResourceStorage resourceStorage;
         [SerializeField] private NavMeshAgent agent;
 
+        private ResourceField resourceField;
         private DroneState droneState;
         private float miningTime = 2f;
-        private ResourcePoint resourcePoint;
+        private ResourceDeposit resourcePoint;
         private bool hasResource;
 
-        private ResourcePoint curTarget;
-
-        public void Init(ResourceField resourceField)
-        {
-            this.resourceField = resourceField;
-        }
+        private ResourceDeposit curTarget;
 
         private void Update()
         {
+            if (resourceField == null)
+            {
+                resourceField = resourceEmmiter.ResourceField;
+            }
+
             switch (droneState)
             {
                 case DroneState.idle:
-                    ResourcePoint target = resourceField.GetClosestRes(transform.position);
+                    ResourceDeposit target = resourceField.GetClosestRes(transform.position);
                     if (target != null)
                     {
                         agent.SetDestination(target.transform.position + ((transform.position - target.transform.position).normalized * 0.1f));
                         ChangeState(DroneState.move);
                         curTarget = target;
-                        Debug.Log(target.transform.position + " ");
                         agent.isStopped = false;
                     }
                     break;
@@ -43,7 +44,7 @@ namespace Entities
                     {
                         if (hasResource)
                         {
-                            //Base trigger
+                            resourceStorage.DropResources();
                             hasResource = false;
                             ChangeState(DroneState.idle);
                         }
@@ -78,7 +79,7 @@ namespace Entities
             yield return new WaitForSeconds(miningTime);
             curTarget.Mining();
             agent.isStopped = false;
-            agent.SetDestination(Vector3.zero); //change to base location
+            agent.SetDestination(resourceStorage.transform.position);
             hasResource = true;
             ChangeState(DroneState.move);
         }
