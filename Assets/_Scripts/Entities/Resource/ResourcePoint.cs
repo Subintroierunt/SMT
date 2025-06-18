@@ -10,9 +10,16 @@ namespace Entities
         public event Action<ResourcePoint, Vector2Int> Depleted;
 
         private bool isDepleted;
+        private bool isLocked;
 
         private Vector2Int coords;
-    
+
+        public bool IsLocked =>
+            isLocked;
+
+        public void Lock() =>
+            isLocked = true;
+
         public void Mining()
         {
             Depleted.Invoke(this, coords);
@@ -25,6 +32,7 @@ namespace Entities
             coords = newCoords;
             transform.localPosition = (Vector3)(Vector2)coords;
             isDepleted = false;
+            isLocked = false;
             gameObject.SetActive(true);
         }
     }

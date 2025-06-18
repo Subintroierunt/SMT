@@ -31,13 +31,15 @@ namespace Entities
                     ResourcePoint target = resourceField.GetClosestRes(transform.position);
                     if (target != null)
                     {
-                        agent.SetDestination(target.transform.position);
+                        agent.SetDestination(target.transform.position + ((transform.position - target.transform.position).normalized * 0.1f));
                         ChangeState(DroneState.move);
                         curTarget = target;
+                        Debug.Log(target.transform.position + " ");
+                        agent.isStopped = false;
                     }
                     break;
                 case DroneState.move:
-                    if (agent.remainingDistance <= 0.3f)
+                    if (agent.remainingDistance <= 1f)
                     {
                         if (hasResource)
                         {
@@ -47,8 +49,17 @@ namespace Entities
                         }
                         else
                         {
-                            ChangeState(DroneState.mine);
-                            StartCoroutine(Mining());
+                            if (!curTarget.IsLocked)
+                            {
+                                curTarget.Lock();
+                                agent.isStopped = true;
+                                ChangeState(DroneState.mine);
+                                StartCoroutine(Mining());
+                            }
+                            else
+                            {
+                                ChangeState(DroneState.idle);
+                            }
                         }
                     }
                     break;
@@ -60,13 +71,13 @@ namespace Entities
         private void ChangeState(DroneState newState)
         {
             droneState = newState;
-            Debug.Log(droneState);
         }
 
         private IEnumerator Mining()
         {
             yield return new WaitForSeconds(miningTime);
             curTarget.Mining();
+            agent.isStopped = false;
             agent.SetDestination(Vector3.zero); //change to base location
             hasResource = true;
             ChangeState(DroneState.move);

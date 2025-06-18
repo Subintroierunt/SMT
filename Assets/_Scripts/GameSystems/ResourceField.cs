@@ -1,6 +1,8 @@
 using Entities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GameSystems
@@ -20,25 +22,27 @@ namespace GameSystems
 
         public ResourcePoint GetClosestRes(Vector3 point)
         {
-            if (resourcePoints.Count == 0)
+            if (resourcePoints.Count == 0 )
             {
                 return null;
             }
 
-            float distance = Mathf.Infinity;
-            int number = 0;
+            SortedDictionary<float, ResourcePoint> distances = new SortedDictionary<float, ResourcePoint>();
 
             for (int i = 0; i < resourcePoints.Count; i++)
             {
-                if (Vector3.Distance(point, resourcePoints[i].transform.position) < distance)
+                distances.Add(Vector3.Distance(point, resourcePoints[i].transform.position), resourcePoints[i]);
+            }
+
+            for (int i = 0; i < distances.Count; i++)
+            {
+                if (!distances.ElementAt(i).Value.IsLocked)
                 {
-                    distance = Vector3.Distance(point, resourcePoints[i].transform.position);
-                    number = i;
+                    return distances.ElementAt(i).Value;
                 }
             }
-            return resourcePoints[number];
-        }
 
-        
+            return null;
+        }
     }
 }
