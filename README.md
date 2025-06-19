@@ -20,3 +20,5 @@ AI дронов главный управляющий скрипт (DroneAI) с 
 
 Инструменты:
 Все передвижение реализованно через Navmesh
+
+https://github.com/user-attachments/assets/d0ba2901-bd87-4b9c-875d-e4d4588f8e8b
