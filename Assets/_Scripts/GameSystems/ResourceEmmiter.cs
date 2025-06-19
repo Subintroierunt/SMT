@@ -51,6 +51,9 @@ namespace GameSystems
             }
         }
 
+        public void SetInterval(float interval) =>
+            emmiterInterval = interval;
+
         private void Emmit()
         {
             if (resourceField.GetCount() == emitterMaxEntities) 

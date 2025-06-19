@@ -22,7 +22,7 @@ namespace Entities
 
         public void Mined()
         {
-            Depleted.Invoke(this, coords);
+            Depleted?.Invoke(this, coords);
             isDepleted = true;
             gameObject.SetActive(false);
         }

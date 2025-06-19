@@ -11,6 +11,7 @@ namespace Entities
         [SerializeField] private ResourceEmmiter resourceEmmiter;
         [SerializeField] private ResourceStorage resourceStorage;
         [SerializeField] private NavMeshAgent agent;
+        [SerializeField] private DroneDrawPath drawPath;
 
         private ResourceField resourceField;
         private DroneState droneState;
@@ -19,6 +20,15 @@ namespace Entities
         private bool hasResource;
 
         private ResourceDeposit curTarget;
+
+        public void Init(ResourceEmmiter emmiter, ResourceStorage storage)
+        {
+            resourceEmmiter = emmiter;
+            resourceStorage = storage;
+        }
+
+        public void SwitchDrawPath(bool value) =>
+            drawPath.SetDraw(value);
 
         private void Update()
         {
@@ -37,6 +47,10 @@ namespace Entities
                         ChangeState(DroneState.move);
                         curTarget = target;
                         agent.isStopped = false;
+                    }
+                    else
+                    {
+                        agent.SetDestination(resourceStorage.transform.position);
                     }
                     break;
                 case DroneState.move:
@@ -67,6 +81,11 @@ namespace Entities
                 case DroneState.mine:
                     break;
             }
+        }
+
+        public void SetSpeed(float speed)
+        {
+            agent.speed = speed;
         }
 
         private void ChangeState(DroneState newState)
