@@ -20,7 +20,7 @@ namespace Entities
         public void Lock() =>
             isLocked = true;
 
-        public void Mining()
+        public void Mined()
         {
             Depleted.Invoke(this, coords);
             isDepleted = true;

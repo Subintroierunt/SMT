@@ -77,7 +77,7 @@ namespace Entities
         private IEnumerator Mining()
         {
             yield return new WaitForSeconds(miningTime);
-            curTarget.Mining();
+            curTarget.Mined();
             agent.isStopped = false;
             agent.SetDestination(resourceStorage.transform.position);
             hasResource = true;
